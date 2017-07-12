@@ -32,12 +32,20 @@ node('bsswtrotmawin')
             bat "docker run -v ${env.WORKSPACE}:c:\\workspace --rm protractornet_buildenv powershell -command \"& {cd .\\workspace\\automation\\docker; .\\buildInContainer.ps1 ${finalVersion}}\""
         }
 
-        ///stage("Archive Package")
-        //{
-            //archiveArtifacts artifacts: '**/Protractor*.nupkg', fingerprint: true
-        //}
-
-        publishToArtifactory(libName, libName, finalVersion)
+        stage("Publish to Artifactory")
+        {
+            debug("Publish of ${libName}")
+            def server = Artifactory.server('RL main artifactory')
+            def uploadSpec = """{
+                "files": [
+                {
+                    "pattern": "${libName}*.nupkg",
+                    "target": "nuget-renlearn/libraries/${libName}/"
+                }
+                ]
+            }"""
+            server.upload(uploadSpec)
+        }
 
     }
     catch(err)
