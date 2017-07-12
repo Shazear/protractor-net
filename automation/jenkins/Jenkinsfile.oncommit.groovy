@@ -34,7 +34,6 @@ node('bsswtrotmawin')
 
         stage("Publish to Artifactory")
         {
-            debug("Publish of ${libName}")
             def server = Artifactory.server('RL main artifactory')
             def uploadSpec = """{
                 "files": [
