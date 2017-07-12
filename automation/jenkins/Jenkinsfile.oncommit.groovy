@@ -4,20 +4,21 @@ String libName =      "Protractor"
 String srcPath =      ".\\src\\${libName}"
 String slnPath =      "${libName}-NET40.sln"
 String artifactoryURL = "http://172.18.15.101:8081/artifactory"
+String finalVersion = "0.10.3.${env.BUILD_NUMBER}"
 
-node('bsswtrotmawin') 
+node('bsswtrotmawin')
 {
     //Colorize the Jenkins log to make it easier to read
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'vga']){
 
     try
     {
-        stage("Checkout") 
+        stage("Checkout")
         {
             checkout scm
             bat "git clean -fdx"
         }
-        
+
         stage("Build Container for .NET 4.52 Protractor Library Build")
         {
             dir(".\\automation\\docker")
@@ -28,13 +29,16 @@ node('bsswtrotmawin')
 
         stage("Run Build Script In Container")
         {
-            bat "docker run -v ${env.WORKSPACE}:c:\\workspace --rm protractornet_buildenv powershell -command \"& {cd .\\workspace\\automation\\docker; .\\buildInContainer.ps1}\""
+            bat "docker run -v ${env.WORKSPACE}:c:\\workspace --rm protractornet_buildenv powershell -command \"& {cd .\\workspace\\automation\\docker; .\\buildInContainer.ps1 ${finalVersion}}\""
         }
 
         stage("Archive Package")
         {
-            archiveArtifacts artifacts: '**/Protractor*.nupkg', fingerprint: true
+            //archiveArtifacts artifacts: '**/Protractor*.nupkg', fingerprint: true
         }
+
+        //publishToArtifactory(libName, libName, finalVersion)
+
     }
     catch(err)
         {
