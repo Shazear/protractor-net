@@ -32,12 +32,12 @@ node('bsswtrotmawin')
             bat "docker run -v ${env.WORKSPACE}:c:\\workspace --rm protractornet_buildenv powershell -command \"& {cd .\\workspace\\automation\\docker; .\\buildInContainer.ps1 ${finalVersion}}\""
         }
 
-        stage("Archive Package")
-        {
+        ///stage("Archive Package")
+        //{
             //archiveArtifacts artifacts: '**/Protractor*.nupkg', fingerprint: true
-        }
+        //}
 
-        //publishToArtifactory(libName, libName, finalVersion)
+        publishToArtifactory(libName, libName, finalVersion)
 
     }
     catch(err)
