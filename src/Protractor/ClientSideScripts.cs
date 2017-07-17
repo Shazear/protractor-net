@@ -53,7 +53,8 @@ function getNg1Hooks(selector, injectorPlease) {
     function tryBackup() {
         return tryEl(document.body) ||
             trySelector('[ng-app]') || trySelector('[ng\\:app]') ||
-            trySelector('[ng-controller]') || trySelector('[ng\\:controller]');
+            trySelector('[ng-controller]') || trySelector('[ng\\:controller]') ||
+            trySelector('app-root');
     }
 
     if (selector) {
@@ -190,7 +191,6 @@ var definitelyNg2OrNewer = false;
       }
   };
   check(attempts);
-};
 ";
 
         /**
